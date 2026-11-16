@@ -1,0 +1,60 @@
+PORTAL RRHH · GRUPO BENIPLAST — APP INSTALABLE
+===============================================
+
+Esta carpeta es la app completa. Trae la portada tal como está hoy:
+las 5 secciones, los 16 artefactos que agregó el equipo, los nombres
+cambiados, el orden y los quitados.
+
+1) PUBLICARLA (una sola vez, 2 minutos)
+---------------------------------------
+Una app instalable necesita una dirección https. La forma más simple:
+  a. Entrá a https://app.netlify.com/drop
+  b. Arrastrá esta carpeta entera a la página.
+  c. Te da una dirección (ej.: https://portal-rrhh-beniplast.netlify.app).
+     Creá una cuenta gratis para que la dirección no venza.
+Sirve cualquier otro hosting de archivos estáticos (GitHub Pages,
+Cloudflare Pages, el servidor web de la empresa).
+
+2) INSTALARLA
+-------------
+  iPhone/iPad : abrir la dirección en Safari → Compartir → "Agregar a inicio".
+  Android     : abrir en Chrome → menú ⋮ → "Instalar app".
+  PC          : abrir en Chrome o Edge → ícono de instalar en la barra de
+                direcciones (o menú → "Instalar Portal RRHH").
+Queda con su ícono y se abre en ventana propia, sin barra del navegador.
+
+3) COMPARTIR LOS CAMBIOS ENTRE TODO EL EQUIPO (opcional)
+--------------------------------------------------------
+Sin este paso, lo que cada persona edita queda solo en su dispositivo.
+Para que todos vean la misma portada:
+  a. https://console.firebase.google.com → Crear proyecto (gratis).
+  b. Compilación → Firestore Database → Crear base de datos.
+  c. Configuración del proyecto → Tus apps → Web (</>) → Registrar.
+     Copiá apiKey, authDomain, projectId y appId en config.js.
+  d. En Firestore → Reglas, pegá:
+
+       rules_version = '2';
+       service cloud.firestore {
+         match /databases/{db}/documents {
+           match /portales/rrhh/{col}/{doc} {
+             allow read, write: if true;
+           }
+         }
+       }
+
+  e. Volvé a subir la carpeta al hosting.
+La primera vez que alguien abre la app, la base se carga sola con la
+portada actual.
+
+OJO: con esas reglas, cualquiera que tenga la dirección de la app puede
+editar la portada (nombres, orden y links; nada más). Si querés que solo
+edite RRHH, se puede agregar inicio de sesión con Google.
+
+A TENER EN CUENTA
+-----------------
+- Los artefactos se siguen abriendo en claude.ai: cada persona necesita
+  su sesión de Claude y tener acceso al artefacto.
+- Los cambios hechos en el artefacto original de Claude después del
+  16/11/2026 no pasan solos a esta app (y al revés).
+- Si modificás archivos, subí el número de versión en sw.js
+  ('portal-rrhh-v1' → 'v2') para que los dispositivos se actualicen.
